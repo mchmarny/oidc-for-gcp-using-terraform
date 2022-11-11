@@ -7,13 +7,15 @@ locals {
   ])
 }
 
-# GCR registry (gcr.io)
-resource "google_container_registry" "registry" {
+# GCR registry 
+resource "google_artifact_registry_repository" "registry" {
+  provider = google-beta
   project = var.project_id
 
-  depends_on = [
-    google_project_service.default["containerregistry.googleapis.com"],
-  ]
+  description = "Trager artifacts registry"
+  location = var.registry_location
+  repository_id = var.registry_name
+  format = "DOCKER"
 }
 
 # Service account to be used for federated auth to publish to GCR
@@ -23,29 +25,14 @@ resource "google_service_account" "github_actions_user" {
 }
 
 # Role binding to allow publisher to publish images
-resource "google_project_iam_member" "github_actions_user_storage_role_binding" {
-  for_each = local.publisher_roles
-  project  = var.project_id
-  role     = each.value
-  member   = "serviceAccount:${google_service_account.github_actions_user.email}"
+resource "google_artifact_registry_repository_iam_member" "github_actions_user_storage_role_binding" {
+  provider   = google-beta
+  project    = var.project_id
+  location   = var.registry_location
+  repository = google_artifact_registry_repository.registry.name
+  role       = "roles/artifactregistry.writer"
+  member     = "serviceAccount:${google_service_account.github_actions_user.email}"
 }
-
-# Default GCR bucket policy in GCS
-data "google_iam_policy" "gcr_bucket_policy" {
-  binding {
-    role = "roles/storage.legacyBucketReader"
-    members = [
-      "serviceAccount:${google_service_account.github_actions_user.email}",
-    ]
-  }
-}
-
-# Assignment of the default GCR bucket policy in GCS to the registry
-resource "google_storage_bucket_iam_policy" "default_gcr_policy" {
-  bucket      = google_container_registry.registry.id
-  policy_data = data.google_iam_policy.gcr_bucket_policy.policy_data
-}
-
 
 # Identiy pool for GitHub action based identity's access to Google Cloud resources
 resource "google_iam_workload_identity_pool" "github_pool" {
