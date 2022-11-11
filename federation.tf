@@ -3,6 +3,7 @@ locals {
   publisher_roles = toset([
     "roles/storage.objectCreator",
     "roles/storage.objectViewer",
+    "roles/artifactregistry.writer",
   ])
 }
 
