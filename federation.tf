@@ -4,6 +4,8 @@ locals {
     "roles/storage.objectCreator",
     "roles/storage.objectViewer",
     "roles/artifactregistry.writer",
+    "roles/cloudkms.viewer",
+    "roles/cloudkms.signerVerifier",
   ])
 }
 
