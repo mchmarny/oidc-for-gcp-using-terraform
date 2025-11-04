@@ -72,3 +72,11 @@ resource "google_service_account_iam_member" "pool_impersonation" {
   role               = "roles/iam.workloadIdentityUser"
   member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_pool.name}/attribute.repository/${var.git_repo}"
 }
+
+# Allow github-actions-user to use the Compute Engine default service account for GKE
+resource "google_service_account_iam_member" "compute_service_account_user" {
+  service_account_id = "projects/${var.project_id}/serviceAccounts/${data.google_project.project.number}-compute@developer.gserviceaccount.com"
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:${google_service_account.github_actions_user.email}"
+}
+
