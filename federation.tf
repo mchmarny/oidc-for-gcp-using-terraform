@@ -35,6 +35,14 @@ resource "google_artifact_registry_repository_iam_member" "github_actions_user_s
   member     = "serviceAccount:${google_service_account.github_actions_user.email}"
 }
 
+# Project-level role bindings for the service account
+resource "google_project_iam_member" "github_actions_user_roles" {
+  for_each = local.publisher_roles
+  project  = var.project_id
+  role     = each.value
+  member   = "serviceAccount:${google_service_account.github_actions_user.email}"
+}
+
 # Identiy pool for GitHub action based identity's access to Google Cloud resources
 resource "google_iam_workload_identity_pool" "github_pool" {
   workload_identity_pool_id = "github-pool"
