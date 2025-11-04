@@ -7,6 +7,7 @@ locals {
     "roles/container.clusterAdmin",
     "roles/storage.objectCreator",
     "roles/storage.objectViewer",
+    "roles/compute.networkAdmin"
   ])
 }
 
