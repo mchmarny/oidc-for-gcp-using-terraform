@@ -1,12 +1,16 @@
 # List of GCP APIs to enable in this project
 locals {
   services = [
-    "servicecontrol.googleapis.com",
-    "containerregistry.googleapis.com",
-    "iam.googleapis.com",
-    "iamcredentials.googleapis.com",
-    "servicemanagement.googleapis.com",
-    "storage-api.googleapis.com",
+  "compute.googleapis.com",
+  "container.googleapis.com",
+  "containerfilesystem.googleapis.com",
+  "containerregistry.googleapis.com",
+  "iam.googleapis.com",
+  "iamcredentials.googleapis.com",
+  "servicecontrol.googleapis.com",
+  "servicemanagement.googleapis.com",
+  "serviceusage.googleapis.com",
+  "storage-api.googleapis.com",
   ]
 }
 
