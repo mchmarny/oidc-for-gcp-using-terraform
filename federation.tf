@@ -1,11 +1,12 @@
 locals {
   # List of roles that will be assigned to the pulbisher service account
   publisher_roles = toset([
+    "roles/artifactregistry.writer",
+    "roles/cloudkms.signerVerifier",
+    "roles/cloudkms.viewer",
+    "roles/container.clusterAdmin",
     "roles/storage.objectCreator",
     "roles/storage.objectViewer",
-    "roles/artifactregistry.writer",
-    "roles/cloudkms.viewer",
-    "roles/cloudkms.signerVerifier",
   ])
 }
 
